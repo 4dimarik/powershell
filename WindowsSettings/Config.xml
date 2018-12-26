@@ -1,0 +1,20 @@
+<computerProperties>
+	<Server id='S1'>
+		<computerName>KSH-S1</computerName>
+		<computerDescription>Узел кластера АС КШ ОЦВ</computerDescription>
+		<Ethernet InterfaceAlias='Ethernet' newInterfaceAlias='Heartbeat' ip='192.168.10.1' prefix='24' gw='' dnsone='' dnstwo=''></Ethernet>
+		<Ethernet InterfaceAlias='Ethernet 2' newInterfaceAlias='EXT' ip='192.168.20.1' prefix='24' gw='' dnsone='192.168.20.2' dnstwo='192.168.20.1'></Ethernet>
+	</Server>
+	<Server id='S2'>
+		<computerName>KSH-S2</computerName>
+		<computerDescription>Узел кластера АС КШ ОЦВ</computerDescription>
+		<Ethernet InterfaceAlias='Ethernet' newInterfaceAlias='Heartbeat' ip='192.168.10.1' prefix='24' gw='' dnsone='' dnstwo=''></Ethernet>
+		<Ethernet InterfaceAlias='Ethernet 2' newInterfaceAlias='EXT' ip='192.168.20.1' prefix='24' gw='' dnsone='192.168.20.2' dnstwo='192.168.20.1'></Ethernet>
+	</Server>
+	<Server id='S0'>
+		<computerName>KSH-S0</computerName>
+		<computerDescription>Сервер холодного резерва АС КШ ОЦВ</computerDescription>
+		<Ethernet InterfaceAlias='Ethernet' newInterfaceAlias='Heartbeat' ip='192.168.10.1' prefix='24' gw='' dnsone='' dnstwo=''></Ethernet>
+		<Ethernet InterfaceAlias='Ethernet 2' newInterfaceAlias='EXT' ip='192.168.20.1' prefix='24' gw='' dnsone='192.168.20.2' dnstwo='192.168.20.1'></Ethernet>
+	</Server>
+</computerProperties>
