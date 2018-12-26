@@ -1,2 +1,6 @@
-п»ї#РўРµРєСѓС‰Р°СЏ РґРёСЂРµРєС‚РѕСЂРёСЏ 
-$MyInvocation.MyCommand.Path | Split-Path -Parent
+#Текущая директория 
+$curDir = $MyInvocation.MyCommand.Path | Split-Path -Parent
+
+#
+
+if (-not (Test-Path -Path "$curDir\TryCatch1.ps1")) {"нету"}
