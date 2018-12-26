@@ -12,59 +12,14 @@ $form.StartPosition = 'CenterScreen'
 #Информационное окно
 . "$curDir\function\infoForm.ps1"
 
-function addInput {
-    param (
-        $el,
-        $labelText,
-        $value,
-        $width,
-        $xPoint = 20,
-        $height = 20
-    )
+#Инпут
+. "$curDir\function\inputLine.ps1"
 
-    $groupBox = New-Object System.Windows.Forms.GroupBox
-    $groupBox.Location = New-Object System.Drawing.Point(10, 10)
-    $groupBox.Size = New-Object System.Drawing.Size(460, 70)
-    $groupBox.BackColor = "#989f6c"
-    $groupBox.Text = $labelText 
-
-    $yPoint = $el * 20;
-
-    $label = New-Object System.Windows.Forms.Label
-    $label.Location = New-Object System.Drawing.Point($xPoint, $yPoint)
-    $label.Size = New-Object System.Drawing.Size($width, $height)
-    $label.Text = "Server"
-
-    $textBox = New-Object System.Windows.Forms.TextBox
-    $textBox.Location = New-Object System.Drawing.Point($xPoint, ($yPoint + 20))
-    $textBox.Size = New-Object System.Drawing.Size($width, $height)   
-    $textBox.Text = $value
-    $textBox.Enabled = $false;
-    $textBox.Padding.Left = 20
-
-    $label1 = New-Object System.Windows.Forms.Label
-    $label1.Location = New-Object System.Drawing.Point(($xPoint + 220), $yPoint)
-    $label1.Size = New-Object System.Drawing.Size($width, $height)
-    $label1.Text = "XML"
-
-    $textBox1 = New-Object System.Windows.Forms.TextBox
-    $textBox1.Location = New-Object System.Drawing.Point(($xPoint + 220), ($yPoint + 20))
-    $textBox1.Size = New-Object System.Drawing.Size($width, $height)   
-    $textBox1.Text = $value
-    $textBox1.Padding.Left = 20
-    
-    $groupBox.Controls.Add($label)
-    $groupBox.Controls.Add($textBox)
-    $groupBox.Controls.Add($label1)
-    $groupBox.Controls.Add($textBox1)
-    $form.Controls.Add($groupBox)
-    
-}
-
-$el = 1
+#groupBox
+. "$curDir\function\groupBox.ps1"
 
 #Загрузка гонфигурации из XML
-$fileName = "Config1.xml"
+$fileName = "Config.xml"
 if (Test-Path -Path "$curDir\$fileName") {
     [xml]$xmlfile = Get-Content "$curDir\$fileName"
 }
@@ -73,10 +28,40 @@ else {
     infoWindow "Ошибка" $infoText
 }
 
+$Color = 'Empty'
+
+$Properties = $xmlfile.computerProperties.server | Where-Object id -eq "S1"
+#
+# Computer Name:
+#
+$Global:lastHeight = 10
+
+& {
+    if ($env:COMPUTERNAME -ne $Properties.computerName) {$Color = "#ff8080"} else {$Color = "#989f6c"}
+    $groupBox = groupBox $form.ClientSize.Width $Color "Computer Name:" $Global:lastHeight
+    $div = addInput 1 $groupBox $env:COMPUTERNAME $Properties.computerName 200
+    $form.Controls.Add($div)
+    $Global:lastHeight += $div.ClientSize.Height
+}
+
+#
+# Ethernet
+#
+& {
+    foreach ($eth in $Properties.Ethernet) {
+        $groupBox = groupBox $form.ClientSize.Width $Color $eth.InterfaceAlias $Global:lastHeight
+        try {
+            Get-NetIPInterface -AddressFamily IPv4 -InterfaceAlias $eth.InterfaceAlias -ErrorAction Stop >$null
+        }
+        catch [Microsoft.PowerShell.Cmdletization.Cim.CimJobException] {
+            $infoText = "Отсутствует интерфейс с именем " + $eth.InterfaceAlias
+            infoWindow "Ошибка" $infoText           
+        }
+        $div = addInput $el $groupBox $eth.InterfaceAlias $eth.newInterfaceAlias 200
+        $form.Controls.Add($div)
+    }
+}
 
 
-addInput $el "Computer Name:" $env:COMPUTERNAME 200
-
-$form.Controls.Add($groupBox)
 
 $form.ShowDialog()
