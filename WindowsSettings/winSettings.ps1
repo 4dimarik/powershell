@@ -57,7 +57,7 @@ $Global:lastHeight = 10
             $infoText = "Отсутствует интерфейс с именем " + $eth.InterfaceAlias
             infoWindow "Ошибка" $infoText           
         }
-        $div = addInput $el $groupBox $eth.InterfaceAlias $eth.newInterfaceAlias 200
+        $div = addInput 1 $groupBox $eth.InterfaceAlias $eth.newInterfaceAlias 200
         $form.Controls.Add($div)
     }
 }
